@@ -8,7 +8,7 @@
 ```
 from artBreader import artBreader
 artBreader = artBreader()
-for _, key in enumerate(artBreader.randomJsonArt(limit = 100, models = 'anime_portrait')):
+for _, key in enumerate(artBreader.randomJsonArt(limit = 100, models = 'anime_portraits')):
     artBreader.getImage(key = key)
 ```
 </details>
