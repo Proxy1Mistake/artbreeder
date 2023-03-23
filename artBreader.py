@@ -18,6 +18,10 @@ class artBreader:
         return req.text
 
     def randomJsonArt(self, limit: int, models: str):
+        '''
+        models : anime_portraits, portraits_sg2, furries, general, landscapes_sg2_concept, buildings, paintings, sci_bio_art,
+        characters, albums
+        '''
         data = {"limit":limit, "offset":0, "order_by":"random", "models":[models]}
         req = self.session.post(url = self.url('images'), headers = self.headers, json = data)
         return randomJsonArt(req.json()).randomJsonArt
