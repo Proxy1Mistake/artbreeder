@@ -43,6 +43,10 @@ class artBreader:
         req = self.session.post(url = self.url('beta/api/images/popular.json'), headers = self.headers, json = data)
         return getTheCreatorImages(req.json()).getTheCreatorImages()
 
+    def getСreatorData(self, creatorName: str):
+        req = self.session.get(url = self.url(f'{creatorName}/__data.json'), headers = self.headers)
+        return getСreatorData(req.json()).getСreatorData
+
     def getImage(self, key: str):
         req = self.session.get(url = f'https://artbreeder.b-cdn.net/imgs/{key}_small.jpeg', headers = self.headers)
         img = open(f'{key}.jpeg', 'wb')
