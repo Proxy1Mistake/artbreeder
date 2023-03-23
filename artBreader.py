@@ -19,10 +19,11 @@ class artBreader:
 
     def randomJsonArt(self, limit: int, models: str):
         data = {"limit":limit, "offset":0, "order_by":"random", "models":[models]}
-        req = self.session.post(url = self.api('images'), headers = self.headers, json = data)
+        req = self.session.post(url = self.url('images'), headers = self.headers, json = data)
         return randomJsonArt(req.json()).randomJsonArt
 
     def getImage(self, key: str):
-        req = self.session.get(url = (f'https://artbreeder.b-cdn.net/imgs/{key}_small.jpeg'), headers = self.headers)
-        img = open(f'{key}.jpeg', 'wb').write(req.content)
+        req = self.session.get(url = f'https://artbreeder.b-cdn.net/imgs/{key}_small.jpeg', headers = self.headers)
+        img = open(f'{key}.jpeg', 'wb')
+        img.write(req.content)
         img.close()
