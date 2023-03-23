@@ -13,7 +13,10 @@ class artBreader:
         return req.text
 
     def login(self, email: str, password: str):
-        data = {f'email': email, 'password': password}
+        data = {
+            f'email': email,
+            'password': password
+        }
         req = self.session.post(url = self.url('login'), headers = self.headers, json = data)
         return req.text
 
@@ -25,6 +28,20 @@ class artBreader:
         data = {"limit":limit, "offset":0, "order_by":"random", "models":[models]}
         req = self.session.post(url = self.url('images'), headers = self.headers, json = data)
         return randomJsonArt(req.json()).randomJsonArt
+
+    def getTheCreatorImages(self, creatorId: int, limit: int):
+        data = {
+            "offset": 56,
+            "limit": limit,
+            "creator": creatorId,
+            "tag_search_type": "substring",
+            "models": "all",
+            "tags": [],
+            "tagged_by": 'null',
+            "order_by": "likes"
+        }
+        req = self.session.post(url = self.url('beta/api/images/popular.json'), headers = self.headers, json = data)
+        return getTheCreatorImages(req.json()).getTheCreatorImages()
 
     def getImage(self, key: str):
         req = self.session.get(url = f'https://artbreeder.b-cdn.net/imgs/{key}_small.jpeg', headers = self.headers)
