@@ -1,5 +1,4 @@
 from requests import Session
-from fake_useragent import FakeUserAgent
 from .util import *
 class artBreader:
     def __init__(self):
