@@ -7,8 +7,8 @@
 
 ```
 from artbreeder import artbreeder
-for _, key in enumerate(artbreeder().random_json_art(limit = 100, models = 'anime_portraits')):
-    artBreader.getImage(key = key)
+for _, key in enumerate(artbreeder().random_json_art(limit = 10, models = 'anime_portraits').key):
+    artbreeder().get_image(key = key)
 ```
 </details>
 
