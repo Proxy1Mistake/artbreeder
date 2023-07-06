@@ -1,22 +1,25 @@
-<h2 align = "center">ä̸̡̮̪͎̮͖̺͇̩͎̯̰̐̐̓̐͋̃̋r̸̢̧̳͎̂̀̒̇̇̽́̉̀́͐͝͝͝͝ͅt̵̨͉̲̖͓̼̦̰̤͈̗͖̙͇̣̉̑̓̏̿͛̍͜B̴̨̠̝̬̰̘̦͈̲̖͙̤̣̰̩́͆̓̋͗́̈́͐̾͆̕ͅr̴̠̞̲̩͈̯͎͍͎̠̟̠̝̥̈́̄͒̚͝ė̴̡̧̨̛̬͍͙͓̺̞̠̯̲̹̝̪̱̿͑͆̉́̊̿͂́̅͑͗̈̿͜͝a̴̧̫̩̭͔̎͋̽͗͑̇̏́͊̈́͋͗̓͜͝͝d̵̢̦̪͉̦͍̱̭̫̰̥͓̲̐̔̏̒̐͜ě̴̛͍̮̠̪̮̖̣̮͖̟̲̦͚̦̩͗̐̀͂̀̽͊͗̽̉̓͂͠͝r̶̡͖̬̞̠͕͈͍̠̠̟̥̳̒̐̈͐̌̓̓͠</h2>
+<h2 align = "center">artbreeder</h2>
 <details align = "center">
-<summary>r̷̡̛͉̤̯͕̔̒͐͂́̍̂̕͜͝͝e̶͈̩̯̪͍͚̽̒̇̔͊̏̍͗̎̄̓́̓̒̈́̋v̶͎̝̏̌̋́̒̄͗ḝ̸̨͔̼̯̩͚͙̖̰͙̱̟̟̰͙̼̏͐̐͛̓́̑̇̆̿͊̔̚̕͠͝à̵̢̠͙͔͓̯͓̜̀̈̕͜ͅl̴̛͔̼̭̦̼̜̻̊́͐̏̎̂͒̄͗̋ ̴̧̨̢̨͙͎͇̜̫̠̮͎̻̣̮͗̾͋̌͒͗̂̽̐̎̈̒́́́͘̚m̵̧̫̗̟̤̘͈̘̟͈͇̘̞̫̞̥͒͆̀͒̍́ͅȩ̶̢̧̗̼̹̩͈͔͙͔̺̤̺͙̿̌̎́̌̊͊͆́̓͝ ̴͎͇̓̄͘:̷̢̮̦̣̞͖̮͆͒͐̕͜͜͝͠ ̴̼̪̺̺̪͙̪͍͉̖̉̒̑̏̊͗̊͑͒̇̅̓̐͆͌̕͠</summary>
+<summary>reveal me : </summary></summary>
 
 ###### This library is intended for requests to the artbreeder website/Эта библиотека предназначена для запросов на сайт artbreeder
 ###### example/Пример :
 
 ```
-from artBreader import artBreader
-artBreader = artBreader()
-for _, key in enumerate(artBreader.randomJsonArt(limit = 100, models = 'anime_portraits')):
+from artbreeder import artbreeder
+for _, key in enumerate(artbreeder().random_json_art(limit = 100, models = 'anime_portraits')):
     artBreader.getImage(key = key)
 ```
 </details>
 
 <details align = "center">
-<summary>M̴̡͕̟̭̣̠̲͓̫͉̙͚͎͙̊͆̌̅͒̂̽͛̀̌̈́͌̏̋͛͜͝ͅy̷̢̖̖̻͓͔͎̩̣̜̰͉̜͔̦͉͑́̿͆̕͝ ̶̬̠͚̱͇͇̖̩̭̲̈̈́S̸̡̧̨̧̡̝̗̗̹̺͈͎̤̰̹͕̈́̓̍o̴̩̪̠͔̔͊̍͋̇̀̾̓̒̍̀̀͋̚͘ͅͅc̷͍̥̦̩͒͋̇̈́̂ī̷̧̞̟̣̥̱̲̽̃̀̂̄͂̏̕͜a̵̭̝̠̝͕̻̾̅͊ļ̸͎̠͎͖͇̼̥͈̖͔̋̄̃͠ ̶̧̥͓̾̑̏̐͒͋͐̀͂̀̕͝Ṋ̷̨̮͇̼̩̗͙̘͔̟͕̬͎̓̓̊͒͒̾́̿̌͑̏͛̿͆͐̚ę̵̡̡̠̬͚͍͇̲̞͐͊̀̄ẗ̶͔́́̀̈́̋̎̊́̔͛̉̕̕͝͠w̸̠̖͕͑͒̅̒͗͂́̀͛͂̊͛̽̈͠o̴̫̖̯̣̮̽̄̚͜r̸͈̩͓̠̽̾̓̔̎̂̈̾̐͒̍́̆̕̚̕͝ķ̶̧̘̜̙̞̙̥͙̳̙͓̮͍͂̄͂͋ ̶̢̛̯͚͖̥̞͔͉͚̤̯͈̠̝̂̾͒̕͘:̴͕͉̜̻̝͉̻̫̺̗̜̠͍̓̍̄̓̄̔͜ͅ ̷͍̗̩̳̼̬͉̞͆̓͛̉̏͂̾́͊͌̃̆̀̐̕͠</summary>
+<summary>my social network : </summary>
 <br>
-<a href = "https://t.me/Proxy1Mallet", target="_blank">
-<img src = "https://kangaviv.com/wp-content/uploads/2020/10/telegram-1.png", width = 60px>
+<a href = "https://t.me/Proxy1Mallet" target="_blank">
+<img src = "https://img.shields.io/badge/ᴛᴇʟᴇɢʀᴀᴍ-92000a?style=for-the-badge&logo=telegram&logoColor=red">
 </br>
+<a href = "https://discordapp.com/users/875370793100533862/" target="_blank">
+<img src = "https://img.shields.io/badge/ᴅɪsᴄᴏʀᴅ-92000a?style=for-the-badge&logo=discord&logoColor=red">
+<br>
+</a>
 </details>
