@@ -5,7 +5,7 @@
 ###### This library is intended for requests to the artbreeder website/Эта библиотека предназначена для запросов на сайт artbreeder
 ###### example/Пример :
 
-```
+```py3
 from artbreeder import artbreeder
 for _, key in enumerate(artbreeder().random_json_art(limit = 10, models = 'anime_portraits').key):
     artbreeder().get_image(key = key)
