@@ -67,7 +67,7 @@ class artbreeder:
         :return: random art in json format
         """
         self.data = {"limit": limit, "offset": 0, "order_by": "random", "models": [models]}
-        req = self.session.post(url = self.url('images'), headers = self.headers, json = data, proxies = self.proxies)
+        req = self.session.post(url = self.url('images'), headers = self.headers, json = self.data, proxies = self.proxies)
         if req.status_code != 200: return req.status_code
         else: return obj_random_json_art(data = req.json()).obj_random_json_art
 
@@ -93,7 +93,7 @@ class artbreeder:
             "tagged_by": 'null',
             "order_by": "likes"
         }
-        req = self.session.post(url = self.url('beta/api/images/popular.json'), headers = self.headers, json = data, proxies = self.proxies)
+        req = self.session.post(url = self.url('beta/api/images/popular.json'), headers = self.headers, json = self.data, proxies = self.proxies)
         if req.status_code != 200: return req.status_code
         else: return obj_get_the_creator_images(data = req.json()).obj_get_the_creator_images
 
@@ -127,7 +127,7 @@ class artbreeder:
             "offset": 0,
             "limit": limit
         }
-        req = self.session.post(url = self.url('image_children'), headers = self.headers, json = data, proxies = self.proxies)
+        req = self.session.post(url = self.url('image_children'), headers = self.headers, json = self.data, proxies = self.proxies)
         return obj_get_image_children(data = req.json()).obj_get_image_children
 
     def get_image(self, key: str):
