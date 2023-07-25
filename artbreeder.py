@@ -1,14 +1,16 @@
 from requests import Session
 from .objects import *
 from fake_useragent import FakeUserAgent
-class artbreeder:
-    def __init__(self, proxies : dict = None):
-        self.headers = {'user-agent': FakeUserAgent().random}
-        self.proxies = proxies
-        self.session = Session()
-        self.url = 'https://www.artbreeder.com/{}'.format
+class Data:
+    _headers = {
+        'user-agent': FakeUserAgent().random
+    }
+    _session = Session()
+    _url = 'https://www.artbreeder.com/{}'.format
 
-    def register(self, email: str, password: str, username: str):
+class Artbreeder(Data):
+    @classmethod
+    def register(cls, email: str, password: str, username: str) -> int | str:
         """
         this function is intended for registration on the site https://www.artbreeder.com/
 
@@ -23,18 +25,19 @@ class artbreeder:
 
         :return: response in the form of text
         """
-        self.data = {
+        _data = {
             'email': email,
             'email_pref': 'false',
             'password': password,
             'refferal': 'null',
             'username': username
         }
-        req = self.session.post(url = self.url('create_user'), headers = self.headers, json = self.data, proxies = self.proxies)
-        if req.status_code != 200: return req.status_code
-        else: return req.text
+        _req = cls._session.post(url = cls._url('create_user'), headers = cls._headers, json = _data)
+        if _req.status_code != 200: return _req.status_code
+        else: return _req.text
 
-    def login(self, email: str, password: str):
+    @classmethod
+    def login(cls, email: str, password: str) -> int | str:
         """
         this function is used for authorization on the site https://www.artbreeder.com/
 
@@ -46,15 +49,16 @@ class artbreeder:
 
         :return: response in the form of text
         """
-        self.data = {
+        _data = {
             'email': email,
             'password': password
         }
-        req = self.session.post(url = self.url('login'), headers = self.headers, json = data, proxies = self.proxies)
-        if req.status_code != 200: return req.status_code
-        else: return req.text
+        _req = cls._session.post(url = cls.url('login'), headers = cls._headers, json = _data)
+        if _req.status_code != 200: return _req.status_code
+        else: return _req.text
 
-    def random_json_art(self, limit: int, models: str):
+    @classmethod
+    def random_json_art(cls, limit: int, models: str) -> int | ObjectRandomJsonArt:
         """
         this function is designed to get random art in json format
 
@@ -64,14 +68,15 @@ class artbreeder:
         :param models: select the models you want to receive. Models : anime_portraits, portraits_sg2, furries, general, landscapes_sg2_concept, buildings, paintings, sci_bio_art, characters, albums
         :type models: :obj: `str`
 
-        :return: random art in json format
+        :return: random art in ObjectRandomJsonArt or int
         """
-        self.data = {"limit": limit, "offset": 0, "order_by": "random", "models": [models]}
-        req = self.session.post(url = self.url('images'), headers = self.headers, json = self.data, proxies = self.proxies)
-        if req.status_code != 200: return req.status_code
-        else: return obj_random_json_art(data = req.json()).obj_random_json_art
+        _data = {"limit": limit, "offset": 0, "order_by": "random", "models": [models]}
+        _req = cls._session.post(url = cls._url('images'), headers = cls._headers, json = _data)
+        if _req.status_code != 200: return _req.status_code
+        else: return ObjectRandomJsonArt(data = _req.json()).object_random_json_art
 
-    def get_the_creator_images(self, creator_id: int, limit: int):
+    @classmethod
+    def get_the_creator_images(cls, creator_id: int, limit: int):
         """
         this function is used to get the works of a certain user
 
@@ -83,7 +88,7 @@ class artbreeder:
 
         :return: user's work in json format
         """
-        self.data = {
+        _data = {
             "offset": 56,
             "limit": limit,
             "creator": creatorId,
@@ -93,11 +98,12 @@ class artbreeder:
             "tagged_by": 'null',
             "order_by": "likes"
         }
-        req = self.session.post(url = self.url('beta/api/images/popular.json'), headers = self.headers, json = self.data, proxies = self.proxies)
-        if req.status_code != 200: return req.status_code
-        else: return obj_get_the_creator_images(data = req.json()).obj_get_the_creator_images
+        _req = cls._session.post(url = cls._url('beta/api/images/popular.json'), headers = cls._headers, json = _data)
+        if _req.status_code != 200: return _req.status_code
+        else: return ObjectRandomJsonArt(data = _req.json()).object_random_json_art
 
-    def get_creator_data(self, creator_name: str):
+    @classmethod
+    def get_creator_data(cls, creator_name: str):
         """
         This function is designed to get user data
 
@@ -106,11 +112,12 @@ class artbreeder:
 
         :return: user data in json format
         """
-        req = self.session.get(url = self.url(f'{creatorName}/__data.json'), headers = self.headers, proxies = self.proxies)
-        if req.status_code != 200: return req.status_code
-        else: return obj_get_creator_data(data = req.json()).obj_get_creator_data
+        _req = self.session.get(url = cls._url(f'{creator_name}/__data.json'), headers = cls._headers)
+        if _req.status_code != 200: return _req.status_code
+        else: return ObjectGetCreatorData(data = _req.json()).object_get_creator_data
 
-    def get_image_children(self, key: str, limit: int):
+    @classmethod
+    def get_image_children(cls, key: str, limit: int):
         """
         this function is designed to get images of children
 
@@ -122,15 +129,16 @@ class artbreeder:
 
         :return: images in json format
         """
-        self.data = {
+        _data = {
             "image_key": key,
             "offset": 0,
             "limit": limit
         }
-        req = self.session.post(url = self.url('image_children'), headers = self.headers, json = self.data, proxies = self.proxies)
-        return obj_get_image_children(data = req.json()).obj_get_image_children
+        _req = cls._session.post(url = cls._url('image_children'), headers = cls._headers, json = _data)
+        return ObjectGetImageChildren(data = _req.json()).object_get_image_children
 
-    def get_image(self, key: str):
+    @classmethod
+    def get_image(cls, key: str):
         """
         this function is designed to save images
 
@@ -139,7 +147,7 @@ class artbreeder:
 
         :return: image
         """
-        req = self.session.get(url = f'https://artbreeder.b-cdn.net/imgs/{key}_small.jpeg', headers = self.headers, proxies = self.proxies)
-        img = open(f'{key}.jpeg', 'wb')
-        img.write(req.content)
-        img.close()
+        _req = cls._session.get(url = f'https://artbreeder.b-cdn.net/imgs/{key}_small.jpeg', headers = cls._headers)
+        _img = open(f'{key}.jpeg', 'wb')
+        _img.write(req.content)
+        _img.close()
