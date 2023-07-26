@@ -76,7 +76,7 @@ class Artbreeder(Data):
         else: return ObjectRandomJsonArt(data = _req.json()).object_random_json_art
 
     @classmethod
-    def get_the_creator_images(cls, creator_id: int, limit: int):
+    def get_the_creator_images(cls, creator_id: int, limit: int) -> int | ObjectGetTheCreatorImages:
         """
         this function is used to get the works of a certain user
 
@@ -100,10 +100,10 @@ class Artbreeder(Data):
         }
         _req = cls._session.post(url = cls._url('beta/api/images/popular.json'), headers = cls._headers, json = _data)
         if _req.status_code != 200: return _req.status_code
-        else: return ObjectRandomJsonArt(data = _req.json()).object_random_json_art
+        else: return ObjectGetTheCreatorImages(data = _req.json()).object_get_the_creator_images
 
     @classmethod
-    def get_creator_data(cls, creator_name: str):
+    def get_creator_data(cls, creator_name: str) -> int | ObjectGetCreatorData:
         """
         This function is designed to get user data
 
@@ -117,7 +117,7 @@ class Artbreeder(Data):
         else: return ObjectGetCreatorData(data = _req.json()).object_get_creator_data
 
     @classmethod
-    def get_image_children(cls, key: str, limit: int):
+    def get_image_children(cls, key: str, limit: int) -> int | ObjectGetImageChildren:
         """
         this function is designed to get images of children
 
@@ -138,7 +138,7 @@ class Artbreeder(Data):
         return ObjectGetImageChildren(data = _req.json()).object_get_image_children
 
     @classmethod
-    def get_image(cls, key: str):
+    def get_image(cls, key: str) -> int | bytes:
         """
         this function is designed to save images
 
@@ -148,6 +148,8 @@ class Artbreeder(Data):
         :return: image
         """
         _req = cls._session.get(url = f'https://artbreeder.b-cdn.net/imgs/{key}_small.jpeg', headers = cls._headers)
-        _img = open(f'{key}.jpeg', 'wb')
-        _img.write(req.content)
-        _img.close()
+        if _req.status_code != 200: return _req.status_code
+        else:
+            _img = open(f'{key}.jpeg', 'wb')
+            _img.write(_req.content)
+            _img.close()
