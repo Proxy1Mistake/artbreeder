@@ -1,16 +1,39 @@
 from requests import Session
 from .objects import *
-from fake_useragent import FakeUserAgent
-class Data:
-    _headers = {
-        'user-agent': FakeUserAgent().random
-    }
-    _session = Session()
-    _url = 'https://www.artbreeder.com/{}'.format
+from pydantic import parse_obj_as
 
-class Artbreeder(Data):
+class Artbreeder:
+    _url = 'https://www.artbreeder.com/{}'.format
+    _api = 'https://www.artbreeder.com/api/{}'.format
+
+    headers = {
+        'user-agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
+    }
+
     @classmethod
-    def register(cls, email: str, password: str, username: str) -> int | str:
+    def __request_method(cls, method: str, url: str, data: dict = None):
+        session = Session()
+
+        if method == 'get':
+            req = session.get(
+                url = url,
+                headers = cls.headers
+            )
+
+        else:
+            req = session.post(
+                url = url,
+                json = data,
+                headers = cls.headers)
+
+        if req.status_code == 200:
+            return req
+
+        print(f'Error >>> {req.status_code} {req.text}')
+        exit()
+
+    @classmethod
+    def register(cls, email: str, password: str, username: str) -> str:
         """
         this function is intended for registration on the site https://www.artbreeder.com/
 
@@ -25,19 +48,21 @@ class Artbreeder(Data):
 
         :return: response in the form of text
         """
-        _data = {
+        data = {
             'email': email,
-            'email_pref': 'false',
-            'password': password,
-            'refferal': 'null',
-            'username': username
+            'redirectAfterLogin': None,
+            'referral': None
         }
-        _req = cls._session.post(url = cls._url('create_user'), headers = cls._headers, json = _data)
-        if _req.status_code != 200: return _req.status_code
-        else: return _req.text
+
+        cls.__request_method(
+            method = 'post',
+            url = cls._url('register-or-login-with-magic-link'),
+            data = data
+        )
+        return 'check your mailbox'
 
     @classmethod
-    def login(cls, email: str, password: str) -> int | str:
+    def login(cls, email: str, password: str) -> str:
         """
         this function is used for authorization on the site https://www.artbreeder.com/
 
@@ -49,107 +74,104 @@ class Artbreeder(Data):
 
         :return: response in the form of text
         """
-        _data = {
+        data = {
             'email': email,
             'password': password
         }
-        _req = cls._session.post(url = cls.url('login'), headers = cls._headers, json = _data)
-        if _req.status_code != 200: return _req.status_code
-        else: return _req.text
+
+        req = cls.__request_method(
+            method = 'post',
+            url = cls._url('login'),
+            data = data
+        )
+
+        cls.headers['cookie'] = f'connect.sid={req.cookies["connect.sid"]}'
+        return req.text
 
     @classmethod
-    def random_json_art(cls, limit: int, models: str) -> int | ObjectRandomJsonArt:
-        """
-        this function is designed to get random art in json format
-
-        :param limit: the maximum number of received art
-        :type limit: :obj: `int`
-
-        :param models: select the models you want to receive. Models : anime_portraits, portraits_sg2, furries, general, landscapes_sg2_concept, buildings, paintings, sci_bio_art, characters, albums
-        :type models: :obj: `str`
-
-        :return: random art in ObjectRandomJsonArt or int
-        """
-        _data = {"limit": limit, "offset": 0, "order_by": "random", "models": [models]}
-        _req = cls._session.post(url = cls._url('images'), headers = cls._headers, json = _data)
-        if _req.status_code != 200: return _req.status_code
-        else: return ObjectRandomJsonArt(data = _req.json()).object_random_json_art
+    def logout(cls) -> str:
+        del cls.headers['cookie']
+        return "You're out."
 
     @classmethod
-    def get_the_creator_images(cls, creator_id: int, limit: int) -> int | ObjectGetTheCreatorImages:
-        """
-        this function is used to get the works of a certain user
-
-        :param creator_id: id of the user whose work you want to get
-        :type creator_id: :obj: `int`
-
-        :param limit: maximum number of user's works received
-        :type limit: :obj: `int`
-
-        :return: user's work in json format
-        """
-        _data = {
-            "offset": 56,
-            "limit": limit,
-            "creator": creatorId,
-            "tag_search_type": "substring",
-            "models": "all",
-            "tags": [],
-            "tagged_by": 'null',
-            "order_by": "likes"
+    def new_username(cls, old_username, new_username, email) -> str:
+        data = {
+            'current_username': old_username,
+            'email': email,
+            'new_username': new_username
         }
-        _req = cls._session.post(url = cls._url('beta/api/images/popular.json'), headers = cls._headers, json = _data)
-        if _req.status_code != 200: return _req.status_code
-        else: return ObjectGetTheCreatorImages(data = _req.json()).object_get_the_creator_images
+
+        return cls.__request_method(
+            method = 'post',
+            url = cls._url('update_user'),
+            data = data
+        ).text
 
     @classmethod
-    def get_creator_data(cls, creator_name: str) -> int | ObjectGetCreatorData:
-        """
-        This function is designed to get user data
-
-        :param creator_name: the name of the user whose data you want to get
-        :type creator_name: :obj: `str`
-
-        :return: user data in json format
-        """
-        _req = self.session.get(url = cls._url(f'{creator_name}/__data.json'), headers = cls._headers)
-        if _req.status_code != 200: return _req.status_code
-        else: return ObjectGetCreatorData(data = _req.json()).object_get_creator_data
-
-    @classmethod
-    def get_image_children(cls, key: str, limit: int) -> int | ObjectGetImageChildren:
-        """
-        this function is designed to get images of children
-
-        :param key: the key to the image
-        :type key: :obj: `str`
-
-        :param limit: Maximum number of images received children
-        :type limit: :obj: `int`
-
-        :return: images in json format
-        """
-        _data = {
-            "image_key": key,
-            "offset": 0,
-            "limit": limit
+    def new_mail(cls, email: str) -> str:
+        data = {
+            'email': email
         }
-        _req = cls._session.post(url = cls._url('image_children'), headers = cls._headers, json = _data)
-        return ObjectGetImageChildren(data = _req.json()).object_get_image_children
+
+        return cls.__request_method(
+            method = 'post',
+            url = cls._url('update_email'),
+            data = data
+        ).text
 
     @classmethod
-    def get_image(cls, key: str) -> int | bytes:
-        """
-        this function is designed to save images
+    def get_posts(cls, limit: int = 1, offset: int = 4, sort: str = 'popular_today', username: str = None):
+        data = {
+            'limit': limit,
+            'offset': offset,
+            'sort': sort,
+            'username': username
+        }
 
-        :param key: the key to the image
-        :type key: :obj: `str`
+        req = cls.__request_method(
+            method = 'post',
+            url = cls._api('posts/get.json'),
+            data = data
+        )
 
-        :return: image
-        """
-        _req = cls._session.get(url = f'https://artbreeder.b-cdn.net/imgs/{key}_small.jpeg', headers = cls._headers)
-        if _req.status_code != 200: return _req.status_code
-        else:
-            _img = open(f'{key}.jpeg', 'wb')
-            _img.write(_req.content)
-            _img.close()
+        return [
+            GetPosts(**_) for _ in req.json()
+        ]
+
+    @classmethod
+    def get_polular_images(cls, creator: int, limit: int = 1, models: str = 'all', offset: int = 0,
+                           order_by: str = 'likes', tag_search_type: str = 'substring', tags: list = []):
+        data = {
+            'creator': creator,
+            'limit': limit,
+            'models': models,
+            'offset': offset,
+            'order_by': order_by,
+            'tag_search_type': tag_search_type,
+            'tagged_by': None,
+            'tags': tags
+        }
+
+        req = cls.__request_method(
+            method = 'post',
+            url = cls._api('images/popular.json'),
+            data = data
+        )
+
+        return [
+            Images(**_) for _ in req.json()
+        ]
+
+    @classmethod
+    def add_comment(cls, text: str, post_key: str):
+        data = {
+            'imageKeys': [],
+            'message': f'{text}\n\n',
+            'postKey': post_key,
+            'richText': [text, '\n'
+            ],
+            'tags': []
+        }
+        cls.__request_method(method = 'post',
+                             url = cls._api(f'posts/{post_key}/comments/create'),
+                             data = data)
