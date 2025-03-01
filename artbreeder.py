@@ -11,20 +11,14 @@ class Artbreeder:
     }
 
     @classmethod
-    def __request_method(cls, method: str, url: str, data: dict = None):
+    def __request_post(cls, url: str, data: dict = None):
         session = Session()
 
-        if method == 'get':
-            req = session.get(
-                url = url,
-                headers = cls.headers
+        req = session.post(
+              url = url,
+              headers = cls.headers,
+              data = data
             )
-
-        else:
-            req = session.post(
-                url = url,
-                json = data,
-                headers = cls.headers)
 
         if req.status_code == 200:
             return req
@@ -55,7 +49,6 @@ class Artbreeder:
         }
 
         cls.__request_method(
-            method = 'post',
             url = cls._url('register-or-login-with-magic-link'),
             data = data
         )
@@ -79,8 +72,7 @@ class Artbreeder:
             'password': password
         }
 
-        req = cls.__request_method(
-            method = 'post',
+        req = cls.__request_post(
             url = cls._url('login'),
             data = data
         )
@@ -101,8 +93,7 @@ class Artbreeder:
             'new_username': new_username
         }
 
-        return cls.__request_method(
-            method = 'post',
+        return cls.__request_post(
             url = cls._url('update_user'),
             data = data
         ).text
@@ -113,8 +104,7 @@ class Artbreeder:
             'email': email
         }
 
-        return cls.__request_method(
-            method = 'post',
+        return cls.__request_post(
             url = cls._url('update_email'),
             data = data
         ).text
@@ -128,8 +118,7 @@ class Artbreeder:
             'username': username
         }
 
-        req = cls.__request_method(
-            method = 'post',
+        req = cls.__request_post(
             url = cls._api('posts/get.json'),
             data = data
         )
@@ -152,8 +141,7 @@ class Artbreeder:
             'tags': tags
         }
 
-        req = cls.__request_method(
-            method = 'post',
+        req = cls.__request_post(
             url = cls._api('images/popular.json'),
             data = data
         )
@@ -172,6 +160,5 @@ class Artbreeder:
             ],
             'tags': []
         }
-        cls.__request_method(method = 'post',
-                             url = cls._api(f'posts/{post_key}/comments/create'),
-                             data = data)
+        cls.__request_post(url = cls._api(f'posts/{post_key}/comments/create'),
+                          data = data)
